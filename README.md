@@ -143,5 +143,3 @@ This project is under active development. Licensing to be defined soon based on 
 Built with care, intelligence, and resilience—by students, for students.
 
 ---
-
-Would you like me to export this as a file or generate a shorter version for the GitHub project description or a landing page?
