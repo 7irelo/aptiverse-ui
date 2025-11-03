@@ -8,7 +8,6 @@ on:
 env:
   EC2_HOST: ${{ secrets.EC2_HOST }}
   EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-  REPO_URL: https://github.com/7irelo/aptiverse-ui.git
 
 jobs:
   deploy:
@@ -33,25 +32,19 @@ jobs:
           set -e
           echo "Starting frontend deployment..."
           
-          # Create directory if it doesn't exist
-          sudo mkdir -p /opt/aptiverse/frontend
-          sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /opt/aptiverse
+          # Create directory if it doesn't exist (without chown)
+          mkdir -p /opt/aptiverse/frontend
           cd /opt/aptiverse/frontend
-          
           echo "Current directory: $(pwd)"
           
           # Clone or pull latest code
           if [ ! -d ".git" ]; then
             echo "Cloning frontend repository..."
-            git clone ${{ env.REPO_URL }} .
+            git clone https://github.com/7irelo/aptiverse-ui.git .
           else
             echo "Pulling latest frontend changes..."
-            git fetch origin
-            git reset --hard origin/main
+            git pull origin main
           fi
-          
-          # Clean up any untracked files
-          git clean -fd
           
           echo "Building Docker image..."
           docker build -t aptiverse-frontend .
@@ -65,11 +58,11 @@ jobs:
             --name aptiverse-frontend \
             --network aptiverse-net \
             -p 3000:3000 \
-            -e NEXT_PUBLIC_API_URL=http://localhost:8080/api \  # Adjust port as needed
+            -e NEXT_PUBLIC_API_URL=http://localhost:5000/api \
             -e NODE_ENV=production \
             aptiverse-frontend
             
-          echo "Cleaning up unused Docker resources..."
+          echo "Cleaning up..."
           docker image prune -f
           
           echo "Frontend deployment completed successfully!"
