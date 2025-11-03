@@ -18,9 +18,7 @@ import {
     Target,
     Award,
     Activity,
-    PieChart,
-    BarChart4,
-    LineChart
+    BarChart4
 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -28,9 +26,58 @@ import { useState } from 'react'
 import './Analytics.css'
 import subjectsData from './_data/subjectsData'
 
+interface ChatMessage {
+    text: string;
+    isUser: boolean;
+}
+
+interface Topic {
+    topic: string;
+    score: number;
+    trend: string;
+}
+
+interface Subject {
+    id: string;
+    name: string;
+    code: string;
+    color: string;
+    progress: number;
+    target: number;
+    predictedScore: number;
+    averageScore: number;
+    studyHours: number;
+    studyEfficiency: number;
+    assignmentsCompleted: number;
+    performanceTrend: string;
+    topicPerformance: Topic[];
+    improvementTips: string[];
+    weeklyStudyHours: number[];
+    attendance: {
+        totalClasses: number;
+        classesAttended: number;
+        attendanceRate: number;
+    };
+    gradeDistribution: Record<string, number>;
+    studyPatterns: {
+        consistency: number;
+        sessionLength: number;
+    };
+    peerComparison: {
+        classAverage: number;
+        percentile: number;
+        ranking: number;
+    };
+    knowledgeGaps: Array<{
+        concept: string;
+        severity: string;
+    }>;
+    learningResources: Record<string, number>;
+}
+
 const Analytics = () => {
     const [expandedTopic, setExpandedTopic] = useState<{subjectId: string, topicIndex: number} | null>(null)
-    const [chatMessages, setChatMessages] = useState<{text: string, isUser: boolean}[]>({})
+    const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>({})
     const [userInput, setUserInput] = useState<{subjectId: string, topicIndex: number, text: string} | null>(null)
     const [expandedSections, setExpandedSections] = useState<{subjectId: string, section: 'topics' | 'tips' | 'analytics'}[]>([])
 
@@ -89,8 +136,9 @@ const Analytics = () => {
             setExpandedTopic({ subjectId, topicIndex })
             
             if (!chatMessages[key]) {
-                const topic = subjectsData.find(s => s.id === subjectId)?.topicPerformance[topicIndex]
-                const initialMessages = [
+                const subject = subjectsData.find(s => s.id === subjectId)
+                const topic = subject?.topicPerformance[topicIndex]
+                const initialMessages: ChatMessage[] = [
                     {
                         text: `I see you're working on ${topic?.topic}. Based on your current performance of ${topic?.score}%, here are some personalized strategies to help you improve:`,
                         isUser: false
@@ -108,7 +156,7 @@ const Analytics = () => {
         }
     }
 
-    const getAIAdvice = (topic: string, score: number) => {
+    const getAIAdvice = (topic: string, score: number): string => {
         if (score >= 80) {
             return `Excellent work on ${topic}! You've mastered the fundamentals. To reach the next level:\n\n• Explore advanced applications and real-world problems\n• Try teaching the concepts to others to deepen understanding\n• Look for connections with other mathematical topics\n• Challenge yourself with competition-level problems`
         } else if (score >= 70) {
@@ -120,8 +168,8 @@ const Analytics = () => {
 
     const handleSendMessage = (subjectId: string, topicIndex: number, message: string) => {
         const key = `${subjectId}-${topicIndex}`
-        const newMessage = { text: message, isUser: true }
-        const aiResponse = {
+        const newMessage: ChatMessage = { text: message, isUser: true }
+        const aiResponse: ChatMessage = {
             text: "I understand you're looking for more specific guidance. For now, I recommend focusing on consistent practice and seeking help from your instructor for detailed explanations. Would you like me to suggest some practice resources?",
             isUser: false
         }
@@ -134,7 +182,7 @@ const Analytics = () => {
         setUserInput(null)
     }
 
-    const renderAdditionalAnalytics = (subject: any) => {
+    const renderAdditionalAnalytics = (subject: Subject) => {
         return (
             <div className="analytics-grid">
                 {/* Attendance Analytics */}
@@ -225,7 +273,7 @@ const Analytics = () => {
                 <div className="analytics-card">
                     <h3><Target size={18} /> Knowledge Gaps</h3>
                     <div className="space-y-2">
-                        {subject.knowledgeGaps.map((gap: any, index: number) => (
+                        {subject.knowledgeGaps.map((gap, index: number) => (
                             <div key={index} className="flex justify-between items-center p-2 bg-red-50 rounded-lg">
                                 <span className="text-sm font-medium">{gap.concept}</span>
                                 <span className={`text-xs px-2 py-1 rounded-full ${
@@ -323,7 +371,7 @@ const Analytics = () => {
 
             {/* Enhanced Subjects List */}
             <div className="subjects-list">
-                {subjectsData.map((subject) => {
+                {(subjectsData as Subject[]).map((subject) => {
                     const isTopicsExpanded = isSectionExpanded(subject.id, 'topics')
                     const isTipsExpanded = isSectionExpanded(subject.id, 'tips')
                     const isAnalyticsExpanded = isSectionExpanded(subject.id, 'analytics')
@@ -451,6 +499,7 @@ const Analytics = () => {
                                         {subject.topicPerformance.map((topic, index) => {
                                             const isExpanded = expandedTopic?.subjectId === subject.id && expandedTopic?.topicIndex === index
                                             const chatKey = `${subject.id}-${index}`
+                                            const currentChatMessages = chatMessages[chatKey] || []
                                             
                                             return (
                                                 <div key={index} className="topic-container">
@@ -479,12 +528,12 @@ const Analytics = () => {
                                                                 <span>AI Study Assistant - {topic.topic}</span>
                                                             </div>
                                                             <div className="chat-messages">
-                                                                {(chatMessages[chatKey] || []).map((message, msgIndex) => (
+                                                                {currentChatMessages.map((message: ChatMessage, msgIndex: number) => (
                                                                     <div 
                                                                         key={msgIndex} 
                                                                         className={`message ${message.isUser ? 'user-message' : 'ai-message'}`}
                                                                     >
-                                                                        {message.text.split('\n').map((line, lineIndex) => (
+                                                                        {message.text.split('\n').map((line: string, lineIndex: number) => (
                                                                             <p key={lineIndex}>{line}</p>
                                                                         ))}
                                                                     </div>
@@ -540,7 +589,7 @@ const Analytics = () => {
                                 </div>
                                 {isTipsExpanded && (
                                     <div className="tips-list">
-                                        {subject.improvementTips.map((tip, index) => (
+                                        {subject.improvementTips.map((tip: string, index: number) => (
                                             <div key={index} className="tip-item">
                                                 <CheckCircle2 size={16} className="text-green-500" />
                                                 <span className="tip-text">{tip}</span>
