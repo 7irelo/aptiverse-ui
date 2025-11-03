@@ -1,32 +1,67 @@
-FROM node:18-alpine AS builder
-WORKDIR /app
+name: Deploy Frontend to EC2
 
-COPY package*.json ./
-RUN npm ci --only=production
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-COPY . .
-RUN npm run build
+env:
+  EC2_HOST: ${{ secrets.EC2_HOST }}
+  EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
 
-FROM node:18-alpine AS runner
-WORKDIR /app
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./next.config.ts
+    - name: Test SSH Connection
+      run: |
+        ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'SSH connection successful'"
 
-RUN mkdir -p .next/cache
-RUN chown -R nextjs:nodejs .next/cache
-
-USER nextjs
-
-EXPOSE 3000
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-ENV NODE_ENV production
-
-CMD ["npm", "start"]
+    - name: Deploy Frontend to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
+          set -e
+          echo "Starting frontend deployment..."
+          
+          cd /opt/aptiverse/frontend
+          echo "Current directory: $(pwd)"
+          
+          # Clone or pull latest code
+          if [ ! -d ".git" ]; then
+            echo "Cloning frontend repository..."
+            git clone https://github.com/7irelo/aptiverse-ui.git .
+          else
+            echo "Pulling latest frontend changes..."
+            git pull origin main
+          fi
+          
+          echo "Building Docker image..."
+          docker build -t aptiverse-frontend .
+          
+          echo "Stopping existing container..."
+          docker stop aptiverse-frontend 2>/dev/null || true
+          docker rm aptiverse-frontend 2>/dev/null || true
+          
+          echo "Starting new container..."
+          docker run -d \
+            --name aptiverse-frontend \
+            --network aptiverse-net \
+            -p 3000:3000 \
+            -e NEXT_PUBLIC_API_URL=http://localhost:5000/api \  # Changed to match backend port
+            -e NODE_ENV=production \
+            aptiverse-frontend
+            
+          echo "Cleaning up..."
+          docker image prune -f
+          
+          echo "Frontend deployment completed successfully!"
+        '
