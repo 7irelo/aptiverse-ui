@@ -1,51 +1,47 @@
 "use client"
 import {
+    Activity,
     AlertTriangle,
+    Award,
     BarChart3,
+    BarChart4,
     Bookmark,
     BookOpen,
-    Brain,
+    BookText,
+    BrainCircuit,
     Calendar,
+    CalendarDays,
     CheckCircle2,
-    Clock,
-    Download,
-    FileText,
-    Lightbulb,
-    PlayCircle,
-    Star,
-    TrendingUp,
-    Users,
-    Video,
-    Send,
     ChevronDown,
     ChevronUp,
-    MessageCircle,
-    Target,
-    Award,
-    Activity,
-    PieChart,
-    Zap,
-    TrendingDown,
-    Eye,
-    BarChart4,
-    TargetIcon,
-    BrainCircuit,
-    Sparkles,
-    Gauge,
+    Clock,
     Clock4,
-    CalendarDays,
-    UserCheck,
+    Download,
+    Eye,
+    Gauge,
+    Lightbulb,
     LineChart,
-    MousePointerClick,
-    BookText,
-    VideoIcon,
+    MessageCircle,
     Mic,
-    Puzzle
-} from 'lucide-react'
-import React, { useState, use } from 'react'
+    MousePointerClick,
+    PieChart,
+    Puzzle,
+    Send,
+    Sparkles,
+    Star,
+    Target,
+    TargetIcon,
+    TrendingDown,
+    TrendingUp,
+    UserCheck,
+    Users,
+    VideoIcon,
+    Zap
+} from 'lucide-react';
+import React, { use, useState } from 'react';
 
-import './Subject.css'
 import subjectsData from '../_data';
+import './Subject.css';
 
 interface ChatMessage {
     text: string;
@@ -109,36 +105,36 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
     })) || []
 
     function getTopicStrengths(topic: string): string {
-        const strengths = {
+        const strengths: Record<string, string> = {
             'Algebra': 'Strong problem-solving and equation manipulation',
             'Calculus': 'Good understanding of basic differentiation',
             'Geometry': 'Excellent spatial reasoning skills',
             'Statistics': 'Accurate data interpretation',
             'Trigonometry': 'Solid grasp of trigonometric identities'
         }
-        return strengths[topic as keyof typeof strengths] || 'Good conceptual understanding'
+        return strengths[topic] || 'Good conceptual understanding'
     }
 
     function getTopicWeaknesses(topic: string): string {
-        const weaknesses = {
+        const weaknesses: Record<string, string> = {
             'Algebra': 'Needs practice with complex equations',
             'Calculus': 'Integration techniques require improvement',
             'Geometry': 'Proof writing needs development',
             'Statistics': 'Probability concepts need reinforcement',
             'Trigonometry': 'Application in real-world problems'
         }
-        return weaknesses[topic as keyof typeof weaknesses] || 'Need more practice with advanced applications'
+        return weaknesses[topic] || 'Need more practice with advanced applications'
     }
 
     function getTopicRecommendations(topic: string): string {
-        const recommendations = {
+        const recommendations: Record<string, string> = {
             'Algebra': 'Practice advanced equation solving daily',
             'Calculus': 'Focus on integration methods and applications',
             'Geometry': 'Work on geometric proofs and theorems',
             'Statistics': 'Study probability distributions and analysis',
             'Trigonometry': 'Master trigonometric identities and graphs'
         }
-        return recommendations[topic as keyof typeof recommendations] || 'Focus on practice problems and review key concepts'
+        return recommendations[topic] || 'Focus on practice problems and review key concepts'
     }
 
     // Enhanced resources based on subject type
@@ -195,7 +191,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
 
     const getAIResponse = (message: string): string => {
         const lowerMessage = message.toLowerCase()
-        
+
         if (lowerMessage.includes('help') || lowerMessage.includes('struggl')) {
             return `I can see you're looking for help with ${subject.name}. Based on your performance analytics:\n\n• Focus on ${subject.weakness} - your current score: ${subject.topicPerformance?.find(t => t.topic === subject.weakness)?.score || 65}%\n• Study efficiency: ${subject.studyEfficiency}% - try spaced repetition\n• Recommended: ${subject.improvementTips?.slice(0, 2).join(', ')}\n• Learning velocity: ${subject.learningVelocity}x average`
         } else if (lowerMessage.includes('improve') || lowerMessage.includes('better')) {
@@ -214,16 +210,26 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
     }
 
     const getPerformanceTrend = () => {
-        return subject.performanceTrend === 'improving' ? 'up' : 
-               subject.performanceTrend === 'declining' ? 'down' : 'stable'
+        return subject.performanceTrend === 'improving' ? 'up' :
+            subject.performanceTrend === 'declining' ? 'down' : 'stable'
     }
 
-    const getPerformanceData = () => {
-        return performanceData[selectedTimeframe]
+    const getPerformanceData = (): number[] => {
+        const timeframeMap = {
+            week: 'weekly',
+            month: 'monthly',
+            term: 'term'
+        } as const;
+        return performanceData[timeframeMap[selectedTimeframe]]
     }
 
-    const getStudyHoursData = () => {
-        return studyHoursData[selectedTimeframe]
+    const getStudyHoursData = (): number[] => {
+        const timeframeMap = {
+            week: 'weekly',
+            month: 'monthly',
+            term: 'term'
+        } as const;
+        return studyHoursData[timeframeMap[selectedTimeframe]]
     }
 
     // Enhanced analytics metrics
@@ -331,21 +337,21 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
 
                 {/* Navigation Tabs */}
                 <div className="navigation-tabs">
-                    <button 
+                    <button
                         className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
                         onClick={() => setActiveTab('overview')}
                     >
                         <BarChart3 size={18} />
                         Overview
                     </button>
-                    <button 
+                    <button
                         className={`tab-btn ${activeTab === 'analytics' ? 'active' : ''}`}
                         onClick={() => setActiveTab('analytics')}
                     >
                         <LineChart size={18} />
                         Deep Analytics
                     </button>
-                    <button 
+                    <button
                         className={`tab-btn ${activeTab === 'resources' ? 'active' : ''}`}
                         onClick={() => setActiveTab('resources')}
                     >
@@ -365,18 +371,18 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                             <div className="stat-header">
                                 <TrendingUp className="stat-icon-main" />
                                 <div className="stat-trend">
-                                    {getPerformanceTrend() === 'up' ? 
+                                    {getPerformanceTrend() === 'up' ?
                                         <TrendingUp size={16} className="text-green-500" /> :
-                                        getPerformanceTrend() === 'down' ? 
-                                        <TrendingDown size={16} className="text-red-500" /> :
-                                        <Activity size={16} className="text-yellow-500" />
+                                        getPerformanceTrend() === 'down' ?
+                                            <TrendingDown size={16} className="text-red-500" /> :
+                                            <Activity size={16} className="text-yellow-500" />
                                     }
                                 </div>
                             </div>
                             <div className="stat-value-main">{subject.averageScore}%</div>
                             <div className="stat-label-main">Average Score</div>
                             <div className="stat-comparison">
-                                {subject.averageScore >= subject.target ? 
+                                {subject.averageScore >= subject.target ?
                                     `+${subject.averageScore - subject.target}% above target` :
                                     `${subject.target - subject.averageScore}% below target`
                                 }
@@ -393,8 +399,8 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                             <div className="stat-value-main">{subject.studyEfficiency}%</div>
                             <div className="stat-label-main">Study Efficiency</div>
                             <div className="stat-comparison">
-                                {subject.studyEfficiency >= 80 ? 'Excellent' : 
-                                 subject.studyEfficiency >= 70 ? 'Good' : 'Needs improvement'}
+                                {subject.studyEfficiency >= 80 ? 'Excellent' :
+                                    subject.studyEfficiency >= 70 ? 'Good' : 'Needs improvement'}
                             </div>
                         </div>
 
@@ -442,7 +448,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                         Current
                                     </div>
                                     <div className="prediction-bar-track">
-                                        <div 
+                                        <div
                                             className="prediction-bar-fill current"
                                             style={{ width: `${predictedScores.current}%` }}
                                         ></div>
@@ -455,7 +461,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                         Predicted
                                     </div>
                                     <div className="prediction-bar-track">
-                                        <div 
+                                        <div
                                             className="prediction-bar-fill predicted"
                                             style={{ width: `${predictedScores.predicted}%` }}
                                         ></div>
@@ -468,7 +474,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                         Target
                                     </div>
                                     <div className="prediction-bar-track">
-                                        <div 
+                                        <div
                                             className="prediction-bar-fill target"
                                             style={{ width: `${predictedScores.target}%` }}
                                         ></div>
@@ -479,9 +485,9 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                             <div className="prediction-insight">
                                 <BrainCircuit size={16} />
                                 <div>
-                                    <strong>AI Insight:</strong> {subject.predictionMetrics?.riskLevel === 'low' ? 
-                                    "You're on track to exceed your target! Maintain current study patterns." : 
-                                    "Focus on consistent practice and address knowledge gaps to reach your target."}
+                                    <strong>AI Insight:</strong> {subject.predictionMetrics?.riskLevel === 'low' ?
+                                        "You're on track to exceed your target! Maintain current study patterns." :
+                                        "Focus on consistent practice and address knowledge gaps to reach your target."}
                                 </div>
                             </div>
                         </div>
@@ -495,21 +501,21 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                 Performance Analytics
                             </h2>
                             <div className="timeframe-selector">
-                                <button 
+                                <button
                                     className={`timeframe-btn ${selectedTimeframe === 'week' ? 'active' : ''}`}
                                     onClick={() => setSelectedTimeframe('week')}
                                 >
                                     <Calendar size={14} />
                                     Week
                                 </button>
-                                <button 
+                                <button
                                     className={`timeframe-btn ${selectedTimeframe === 'month' ? 'active' : ''}`}
                                     onClick={() => setSelectedTimeframe('month')}
                                 >
                                     <CalendarDays size={14} />
                                     Month
                                 </button>
-                                <button 
+                                <button
                                     className={`timeframe-btn ${selectedTimeframe === 'term' ? 'active' : ''}`}
                                     onClick={() => setSelectedTimeframe('term')}
                                 >
@@ -518,7 +524,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div className="charts-grid-enhanced">
                             <div className="chart-container-enhanced">
                                 <h4 className="chart-title">
@@ -526,16 +532,16 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                     Performance Trend
                                 </h4>
                                 <div className="bar-chart-enhanced">
-                                    {getPerformanceData().map((value, index) => (
+                                    {getPerformanceData().map((value: number, index: number) => (
                                         <div key={index} className="bar-wrapper-enhanced">
-                                            <div 
+                                            <div
                                                 className={`bar-enhanced ${subject.color} glow`}
                                                 style={{ height: `${value}%` }}
                                                 title={`${value}%`}
                                             ></div>
                                             <span className="bar-label-enhanced">
                                                 {selectedTimeframe === 'week' ? ['M', 'T', 'W', 'T', 'F', 'S', 'S'][index] :
-                                                 selectedTimeframe === 'month' ? `W${index + 1}` : `M${index + 1}`}
+                                                    selectedTimeframe === 'month' ? `W${index + 1}` : `M${index + 1}`}
                                             </span>
                                         </div>
                                     ))}
@@ -549,14 +555,14 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                 </h4>
                                 <div className="line-chart-enhanced">
                                     <div className="line-graph-enhanced">
-                                        {getStudyHoursData().map((hours, index) => {
+                                        {getStudyHoursData().map((hours: number, index: number) => {
                                             const maxHours = Math.max(...getStudyHoursData())
                                             const percentage = maxHours > 0 ? (hours / maxHours) * 90 : 0
                                             return (
-                                                <div 
+                                                <div
                                                     key={index}
                                                     className="data-point-enhanced glow"
-                                                    style={{ 
+                                                    style={{
                                                         left: `${(index / (getStudyHoursData().length - 1)) * 100}%`,
                                                         bottom: `${percentage}%`
                                                     }}
@@ -566,10 +572,10 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                         })}
                                     </div>
                                     <div className="chart-labels-enhanced">
-                                        {getStudyHoursData().map((_, index) => (
+                                        {getStudyHoursData().map((_: number, index: number) => (
                                             <span key={index}>
                                                 {selectedTimeframe === 'week' ? ['M', 'T', 'W', 'T', 'F', 'S', 'S'][index] :
-                                                 selectedTimeframe === 'month' ? `W${index + 1}` : `M${index + 1}`}
+                                                    selectedTimeframe === 'month' ? `W${index + 1}` : `M${index + 1}`}
                                             </span>
                                         ))}
                                     </div>
@@ -596,12 +602,11 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                         <span className="efficiency-score">{skill.score}%</span>
                                     </div>
                                     <div className="efficiency-bar">
-                                        <div 
-                                            className={`efficiency-fill ${
-                                                skill.score >= 80 ? 'excellent' :
-                                                skill.score >= 70 ? 'good' :
-                                                skill.score >= 60 ? 'average' : 'poor'
-                                            } glow`}
+                                        <div
+                                            className={`efficiency-fill ${skill.score >= 80 ? 'excellent' :
+                                                    skill.score >= 70 ? 'good' :
+                                                        skill.score >= 60 ? 'average' : 'poor'
+                                                } glow`}
                                             style={{ width: `${skill.score}%` }}
                                         ></div>
                                     </div>
@@ -619,7 +624,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                         <div className="topics-list">
                             {enhancedTopics.map((topic, index) => (
                                 <div key={index} className="topic-item glow-hover">
-                                    <div 
+                                    <div
                                         className="topic-header"
                                         onClick={() => toggleTopicExpansion(index)}
                                     >
@@ -632,11 +637,10 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                             </div>
                                         </div>
                                         <div className="topic-score-container">
-                                            <span className={`topic-score ${
-                                                topic.score >= 80 ? 'score-excellent' :
-                                                topic.score >= 70 ? 'score-good' :
-                                                topic.score >= 60 ? 'score-average' : 'score-poor'
-                                            }`}>
+                                            <span className={`topic-score ${topic.score >= 80 ? 'score-excellent' :
+                                                    topic.score >= 70 ? 'score-good' :
+                                                        topic.score >= 60 ? 'score-average' : 'score-poor'
+                                                }`}>
                                                 {topic.score}%
                                             </span>
                                             {expandedTopic === index ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -644,11 +648,10 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                     </div>
                                     <div className="topic-progress">
                                         <div
-                                            className={`topic-progress-bar ${
-                                                topic.score >= 80 ? 'bg-green-500' :
-                                                topic.score >= 70 ? 'bg-blue-500' :
-                                                topic.score >= 60 ? 'bg-yellow-500' : 'bg-red-500'
-                                            }`}
+                                            className={`topic-progress-bar ${topic.score >= 80 ? 'bg-green-500' :
+                                                    topic.score >= 70 ? 'bg-blue-500' :
+                                                        topic.score >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                                }`}
                                             style={{ width: `${topic.progress}%` }}
                                         ></div>
                                     </div>
@@ -708,11 +711,11 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                     </div>
                                 ) : (
                                     chatMessages.map((message, index) => (
-                                        <div 
-                                            key={index} 
+                                        <div
+                                            key={index}
                                             className={`message ${message.isUser ? 'user-message' : 'ai-message'}`}
                                         >
-                                            {message.text.split('\n').map((line, lineIndex) => (
+                                            {message.text.split('\n').map((line: string, lineIndex: number) => (
                                                 <p key={lineIndex}>{line}</p>
                                             ))}
                                         </div>
@@ -730,7 +733,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                         if (e.key === 'Enter') handleSendMessage()
                                     }}
                                 />
-                                <button 
+                                <button
                                     className="send-button glow"
                                     onClick={handleSendMessage}
                                     disabled={!userInput.trim()}
@@ -748,13 +751,13 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                             Smart Study Strategies
                         </h2>
                         <div className="tips-list">
-                            {subject.improvementTips?.map((tip, index) => (
+                            {subject.improvementTips?.map((tip: string, index: number) => (
                                 <div key={index} className="tip-item glow-hover">
                                     <div className="tip-header">
                                         <div className="tip-priority">
                                             {index === 0 ? <AlertTriangle className="text-red-500" size={16} /> :
-                                             index < 3 ? <Star className="text-yellow-500" size={16} /> :
-                                             <CheckCircle2 className="text-green-500" size={16} />}
+                                                index < 3 ? <Star className="text-yellow-500" size={16} /> :
+                                                    <CheckCircle2 className="text-green-500" size={16} />}
                                         </div>
                                         <span className="tip-title">{tip.split(':')[0]}</span>
                                     </div>
@@ -804,7 +807,7 @@ const Subject: React.FC<{ params: Promise<{ subject: string }> }> = ({ params })
                                     <div className="analytics-label">{metric.label}</div>
                                     <div className="analytics-value">{metric.value}/{metric.max}</div>
                                     <div className="analytics-bar">
-                                        <div 
+                                        <div
                                             className="analytics-fill"
                                             style={{ width: `${(metric.value / metric.max) * 100}%` }}
                                         ></div>
