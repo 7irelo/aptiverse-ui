@@ -2,11 +2,9 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --no-audit --prefer-offline
+RUN npm ci
 
 COPY . .
-
-ENV NODE_OPTIONS="--max-old-space-size=1024"
 RUN npm run build
 
 FROM node:18-alpine AS runner
@@ -19,6 +17,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+RUN mkdir -p .next/cache
+RUN chown -R nextjs:nodejs .next/cache
 
 USER nextjs
 

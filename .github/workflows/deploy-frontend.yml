@@ -10,42 +10,61 @@ env:
   EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Create Docker image
+      run: |
+        docker build -t aptiverse-frontend .
+        docker save aptiverse-frontend | gzip > frontend-image.tar.gz
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-image
+        path: frontend-image.tar.gz
+        retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-image
+        path: .
+
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.8.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Test SSH Connection
+    - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'SSH connection successful'"
-
-    - name: Deploy Frontend to EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
+        scp -o StrictHostKeyChecking=no frontend-image.tar.gz ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/tmp/
+        
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
           set -e
-          echo "Starting frontend deployment..."
-          
-          cd /opt/aptiverse/frontend
-          echo "Current directory: $(pwd)"
-          
-          # Clone or pull latest code
-          if [ ! -d ".git" ]; then
-            echo "Cloning frontend repository..."
-            git clone https://github.com/7irelo/aptiverse-ui.git .
-          else
-            echo "Pulling latest frontend changes..."
-            git pull origin main
-          fi
-          
-          echo "Building Docker image..."
-          docker build -t aptiverse-frontend .
+          echo "Loading Docker image..."
+          docker load < /tmp/frontend-image.tar.gz
           
           echo "Stopping existing container..."
           docker stop aptiverse-frontend 2>/dev/null || true
@@ -56,11 +75,12 @@ jobs:
             --name aptiverse-frontend \
             --network aptiverse-net \
             -p 3000:3000 \
-            -e NEXT_PUBLIC_API_URL=http://localhost:5000/api \  # Changed to match backend port
+            -e NEXT_PUBLIC_API_URL=http://localhost:5000/api \
             -e NODE_ENV=production \
             aptiverse-frontend
             
           echo "Cleaning up..."
+          rm /tmp/frontend-image.tar.gz
           docker image prune -f
           
           echo "Frontend deployment completed successfully!"
