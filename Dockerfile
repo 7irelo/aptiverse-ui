@@ -32,6 +32,8 @@ jobs:
           set -e
           echo "Starting frontend deployment..."
           
+          # Create directory if it doesn't exist (without chown)
+          mkdir -p /opt/aptiverse/frontend
           cd /opt/aptiverse/frontend
           echo "Current directory: $(pwd)"
           
@@ -56,7 +58,7 @@ jobs:
             --name aptiverse-frontend \
             --network aptiverse-net \
             -p 3000:3000 \
-            -e NEXT_PUBLIC_API_URL=http://localhost:5000/api \  # Changed to match backend port
+            -e NEXT_PUBLIC_API_URL=http://localhost:5000/api \
             -e NODE_ENV=production \
             aptiverse-frontend
             
