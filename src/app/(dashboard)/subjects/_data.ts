@@ -1585,12 +1585,12 @@ const subjectsData = [
 ]
 
 // Analytics Helper Functions
-export const calculateOverallProgress = (subjects) => {
-  const totalProgress = subjects.reduce((sum, subject) => sum + subject.progress, 0);
+export const calculateOverallProgress = (subjects: any) => {
+  const totalProgress = subjects.reduce((sum: any, subject: any) => sum + subject.progress, 0);
   return Math.round(totalProgress / subjects.length);
 };
 
-export const getSubjectPerformanceTrend = (subject) => {
+export const getSubjectPerformanceTrend = (subject: any) => {
   const scores = subject.performanceHistory?.weeklyScores || [];
   if (scores.length < 2) return 'stable';
   
@@ -1602,7 +1602,7 @@ export const getSubjectPerformanceTrend = (subject) => {
   return 'stable';
 };
 
-export const generateStudyRecommendations = (subject) => {
+export const generateStudyRecommendations = (subject: any) => {
   const recommendations = [];
   
   if (subject.studyEfficiency < 70) {
@@ -1613,14 +1613,14 @@ export const generateStudyRecommendations = (subject) => {
     recommendations.push('Increase class attendance and participation');
   }
   
-  if (subject.knowledgeGaps.some(gap => gap.severity === 'high')) {
+  if (subject.knowledgeGaps.some((gap: any) => gap.severity === 'high')) {
     recommendations.push('Focus on addressing high-priority knowledge gaps');
   }
   
   return recommendations;
 };
 
-export const calculateLearningEfficiency = (subject) => {
+export const calculateLearningEfficiency = (subject: any) => {
   const studyHours = subject.studyHours;
   const scoreImprovement = subject.averageScore - 50; // Assuming 50 as baseline
   return Math.round((scoreImprovement / studyHours) * 10);
