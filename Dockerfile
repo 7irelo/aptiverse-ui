@@ -37,6 +37,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./
 
 RUN mkdir -p .next/cache/images
