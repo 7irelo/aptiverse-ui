@@ -6,24 +6,6 @@ RUN npm ci
 
 RUN npm install sharp
 
-# Create next.config.js during build to ensure it's used
-RUN cat > next.config.js << 'EOF'
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    domains: ['cdn.pixabay.com'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'cdn.pixabay.com',
-      },
-    ],
-  },
-}
-
-module.exports = nextConfig;
-EOF
-
 COPY . .
 RUN npm run build
 
@@ -37,8 +19,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-
-COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./
 
 RUN mkdir -p .next/cache/images
 RUN chown -R nextjs:nodejs .next/cache
