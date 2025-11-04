@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+RUN npm install sharp
+
 COPY . .
 RUN npm run build
 
@@ -18,8 +20,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
-RUN mkdir -p .next/cache
+RUN mkdir -p .next/cache/images
 RUN chown -R nextjs:nodejs .next/cache
+
+RUN ls -la .next/cache/
 
 USER nextjs
 
