@@ -31,7 +31,9 @@ jobs:
 
     - name: Create Docker image
       run: |
-        docker build -t aptiverse-frontend .
+        # Add cache busting and use simple JS config
+        echo "BUILD_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+        docker build --no-cache -t aptiverse-frontend .
         docker save aptiverse-frontend | gzip > frontend-image.tar.gz
 
     - name: Upload artifact
@@ -75,7 +77,7 @@ jobs:
             --name aptiverse-frontend \
             --network aptiverse-net \
             -p 3000:3000 \
-            -e NEXT_PUBLIC_API_URL=http://localhost:5000/api \
+            -e NEXT_PUBLIC_API_URL=https://aptiverse.co.za/api \
             -e NODE_ENV=production \
             aptiverse-frontend
             
