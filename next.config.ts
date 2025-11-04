@@ -6,18 +6,8 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.pixabay.com',
-        port: '',
-        pathname: '/photo/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.pixabay.com',
-        pathname: '**',
       },
     ],
-  },
-  experimental: {
-    optimizeCss: false,
   },
 }
 
