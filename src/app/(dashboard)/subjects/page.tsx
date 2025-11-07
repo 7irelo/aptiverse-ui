@@ -1,303 +1,229 @@
-import React from 'react'
+"use client"
+import { BookOpen, Edit, MoreVertical, Plus, Search, Trash2 } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { 
-  BookOpen, 
-  TrendingUp, 
-  Clock, 
-  Target, 
-  Award,
-  BarChart3,
-  Calendar,
-  FileText,
-  ArrowRight,
-  Star
-} from 'lucide-react'
-
-import './Subjects.css'
-
-// Mock data for South African NSC subjects
-const subjectsData = [
-  {
-    id: 'mathematics',
-    name: 'Mathematics',
-    code: 'MAT',
-    description: 'Algebra, Calculus, Geometry and Mathematical Literacy',
-    progress: 75,
-    target: 80,
-    averageScore: 72,
-    studyHours: 18,
-    assignmentsCompleted: 12,
-    upcomingDeadlines: 2,
-    strength: 'Algebra',
-    weakness: 'Calculus',
-    lastActivity: '2 days ago',
-    color: 'bg-blue-500',
-    textColor: 'text-blue-600',
-    borderColor: 'border-blue-200'
-  },
-  {
-    id: 'physical-sciences',
-    name: 'Physical Sciences',
-    code: 'PSC',
-    description: 'Physics and Chemistry fundamentals',
-    progress: 68,
-    target: 75,
-    averageScore: 65,
-    studyHours: 15,
-    assignmentsCompleted: 8,
-    upcomingDeadlines: 3,
-    strength: 'Chemistry',
-    weakness: 'Physics',
-    lastActivity: '1 day ago',
-    color: 'bg-purple-500',
-    textColor: 'text-purple-600',
-    borderColor: 'border-purple-200'
-  },
-  {
-    id: 'life-sciences',
-    name: 'Life Sciences',
-    code: 'LSC',
-    description: 'Biology, Ecology and Human Anatomy',
-    progress: 82,
-    target: 78,
-    averageScore: 79,
-    studyHours: 12,
-    assignmentsCompleted: 10,
-    upcomingDeadlines: 1,
-    strength: 'Human Biology',
-    weakness: 'Ecology',
-    lastActivity: '3 days ago',
-    color: 'bg-green-500',
-    textColor: 'text-green-600',
-    borderColor: 'border-green-200'
-  },
-  {
-    id: 'english',
-    name: 'English Home Language',
-    code: 'ENG',
-    description: 'Language, Literature and Communication',
-    progress: 88,
-    target: 85,
-    averageScore: 84,
-    studyHours: 10,
-    assignmentsCompleted: 15,
-    upcomingDeadlines: 0,
-    strength: 'Literature',
-    weakness: 'Creative Writing',
-    lastActivity: 'Today',
-    color: 'bg-red-500',
-    textColor: 'text-red-600',
-    borderColor: 'border-red-200'
-  },
-  {
-    id: 'afrikaans',
-    name: 'Afrikaans FAL',
-    code: 'AFR',
-    description: 'First Additional Language - Reading and Writing',
-    progress: 65,
-    target: 70,
-    averageScore: 62,
-    studyHours: 8,
-    assignmentsCompleted: 6,
-    upcomingDeadlines: 2,
-    strength: 'Reading',
-    weakness: 'Writing',
-    lastActivity: '4 days ago',
-    color: 'bg-orange-500',
-    textColor: 'text-orange-600',
-    borderColor: 'border-orange-200'
-  },
-  {
-    id: 'geography',
-    name: 'Geography',
-    code: 'GEO',
-    description: 'Physical and Human Geography',
-    progress: 72,
-    target: 75,
-    averageScore: 70,
-    studyHours: 9,
-    assignmentsCompleted: 7,
-    upcomingDeadlines: 1,
-    strength: 'Map Work',
-    weakness: 'Climate Studies',
-    lastActivity: '2 days ago',
-    color: 'bg-cyan-500',
-    textColor: 'text-cyan-600',
-    borderColor: 'border-cyan-200'
-  },
-  {
-    id: 'accounting',
-    name: 'Accounting',
-    code: 'ACC',
-    description: 'Financial Accounting and Business Principles',
-    progress: 79,
-    target: 82,
-    averageScore: 76,
-    studyHours: 14,
-    assignmentsCompleted: 9,
-    upcomingDeadlines: 2,
-    strength: 'Financial Statements',
-    weakness: 'Cost Accounting',
-    lastActivity: 'Yesterday',
-    color: 'bg-indigo-500',
-    textColor: 'text-indigo-600',
-    borderColor: 'border-indigo-200'
-  },
-  {
-    id: 'business-studies',
-    name: 'Business Studies',
-    code: 'BUS',
-    description: 'Business Management and Entrepreneurship',
-    progress: 85,
-    target: 80,
-    averageScore: 82,
-    studyHours: 11,
-    assignmentsCompleted: 11,
-    upcomingDeadlines: 1,
-    strength: 'Business Management',
-    weakness: 'Entrepreneurship',
-    lastActivity: 'Today',
-    color: 'bg-emerald-500',
-    textColor: 'text-emerald-600',
-    borderColor: 'border-emerald-200'
-  }
-]
+import { subjectsData } from './constants'
 
 const Subjects = () => {
-  const overallStats = {
-    totalSubjects: subjectsData.length,
-    averageProgress: Math.round(subjectsData.reduce((sum, subject) => sum + subject.progress, 0) / subjectsData.length),
-    totalStudyHours: subjectsData.reduce((sum, subject) => sum + subject.studyHours, 0),
-    assignmentsCompleted: subjectsData.reduce((sum, subject) => sum + subject.assignmentsCompleted, 0)
-  }
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const filteredSubjects = subjectsData.filter(subject =>
+    subject.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    subject.code.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  // Close dropdown when clicking outside
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+  //       setOpenDropdown(null);
+  //     }
+  //   };
+
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
 
   return (
-    <div className="subjects-container">
-      {/* Header Section */}
-      <div className="subjects-header">
-        <div className="header-content">
-          <div className="header-text">
-            <h1 className="page-title">My Subjects</h1>
-            <p className="page-subtitle">National Senior Certificate Curriculum</p>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div className="mb-6 lg:mb-0">
+              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Academic Subjects</h1>
+              <p className="mt-2 text-sm text-gray-600">National Senior Certificate Curriculum Management</p>
+            </div>
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+            >
+              <Plus size={18} />
+              Add Subject
+            </button>
           </div>
-          <div className="header-stats">
-            <div className="stat-card">
-              <BookOpen className="text-blue-600" size={20} />
-              <div>
-                <span className="stat-value">{overallStats.totalSubjects}</span>
-                <span className="stat-label">Subjects</span>
-              </div>
+
+          {/* Search Bar */}
+          <div className="mt-6 max-w-md">
+            <div className="relative">
+              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search subjects..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 bg-white"
+              />
             </div>
-            <div className="stat-card">
-              <TrendingUp className="text-green-600" size={20} />
-              <div>
-                <span className="stat-value">{overallStats.averageProgress}%</span>
-                <span className="stat-label">Avg Progress</span>
-              </div>
-            </div>
-            <div className="stat-card">
-              <Clock className="text-purple-600" size={20} />
-              <div>
-                <span className="stat-value">{overallStats.totalStudyHours}h</span>
-                <span className="stat-label">Study Time</span>
-              </div>
-            </div>
+          </div>
+        </div>
+
+        {/* Subjects Table */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Subject</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Code</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Progress</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Avg Score</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Study Hours</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Assignments</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Due Soon</th>
+                  <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredSubjects.map((subject) => (
+                  <tr key={subject.id} className="hover:bg-gray-50 transition-colors duration-150">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${subject.color}`}>
+                          <BookOpen size={14} className="text-white" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">{subject.name}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm text-gray-600 font-mono">{subject.code}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3 min-w-[120px]">
+                        <span className="text-sm font-medium text-gray-900 w-8">{subject.progress}%</span>
+                        <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-300 ${subject.color}`}
+                            style={{ width: `${subject.progress}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm font-medium text-gray-900">{subject.averageScore}%</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm text-gray-600">{subject.studyHours}h</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm text-gray-600">{subject.assignmentsCompleted}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        subject.upcomingDeadlines > 0 
+                          ? 'bg-yellow-100 text-yellow-800' 
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {subject.upcomingDeadlines}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div ref={dropdownRef} className="relative inline-flex justify-end">
+                        <button
+                          onClick={() => setOpenDropdown(openDropdown === subject.id ? null : subject.id)}
+                          className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1"
+                        >
+                          <MoreVertical size={16} />
+                        </button>
+                        {openDropdown === subject.id && (
+                          <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+                            <Link href={`/subjects/${subject.id}`} className="block">
+                              <button
+                                onClick={() => setOpenDropdown(null)}
+                                className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                              >
+                                <Edit size={14} />
+                                Edit Details
+                              </button>
+                            </Link>
+                            <button
+                              onClick={() => {
+                                // Handle delete logic
+                                setOpenDropdown(null);
+                              }}
+                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+                            >
+                              <Trash2 size={14} />
+                              Remove Subject
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      {/* Subjects Grid */}
-      <div className="subjects-grid">
-        {subjectsData.map((subject) => (
-          <Link 
-            key={subject.id} 
-            href={`/subjects/${subject.id}`}
-            className="subject-card-link"
-          >
-            <div className="subject-card">
-              {/* Subject Header */}
-              <div className="subject-header">
-                <div className="subject-icon">
-                  <div className={`subject-badge ${subject.color}`}>
-                    <BookOpen size={20} className="text-white" />
-                  </div>
-                  <div className="subject-info">
-                    <h3 className="subject-name">{subject.name}</h3>
-                    <p className="subject-code">{subject.code}</p>
-                  </div>
-                </div>
-                <div className="subject-arrow">
-                  <ArrowRight size={16} className="text-gray-400" />
-                </div>
-              </div>
-
-              {/* Progress Section */}
-              <div className="progress-section">
-                <div className="progress-header">
-                  <span className="progress-label">Progress</span>
-                  <span className="progress-value">{subject.progress}%</span>
-                </div>
-                <div className="progress-bar">
-                  <div 
-                    className={`progress-fill ${subject.color}`}
-                    style={{ width: `${subject.progress}%` }}
-                  ></div>
-                </div>
-                <div className="progress-target">
-                  Target: {subject.target}%
-                </div>
-              </div>
-
-              {/* Analytics Summary */}
-              <div className="analytics-grid">
-                <div className="analytics-item">
-                  <BarChart3 size={16} className="text-gray-500" />
-                  <span className="analytics-value">{subject.averageScore}%</span>
-                  <span className="analytics-label">Avg Score</span>
-                </div>
-                <div className="analytics-item">
-                  <Clock size={16} className="text-gray-500" />
-                  <span className="analytics-value">{subject.studyHours}h</span>
-                  <span className="analytics-label">Study Time</span>
-                </div>
-                <div className="analytics-item">
-                  <FileText size={16} className="text-gray-500" />
-                  <span className="analytics-value">{subject.assignmentsCompleted}</span>
-                  <span className="analytics-label">Assignments</span>
-                </div>
-                <div className="analytics-item">
-                  <Calendar size={16} className="text-gray-500" />
-                  <span className="analytics-value">{subject.upcomingDeadlines}</span>
-                  <span className="analytics-label">Due Soon</span>
-                </div>
-              </div>
-
-              {/* Strengths & Weaknesses */}
-              <div className="swot-section">
-                <div className="swot-item">
-                  <div className="swot-label strength">
-                    <Star size={12} />
-                    Strength
-                  </div>
-                  <span className="swot-text">{subject.strength}</span>
-                </div>
-                <div className="swot-item">
-                  <div className="swot-label weakness">
-                    <Target size={12} />
-                    Focus Area
-                  </div>
-                  <span className="swot-text">{subject.weakness}</span>
-                </div>
-              </div>
-
-              {/* Last Activity */}
-              <div className="last-activity">
-                <span className="activity-text">Last activity: {subject.lastActivity}</span>
-              </div>
+      {/* Create Subject Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 backdrop-blur-[25px] flex items-center justify-center z-50 p-4 bg-transparent">
+          <div className="bg-white rounded-xl w-full max-w-md max-h-[90vh] overflow-auto border border-gray-200 shadow-lg">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">Add New Subject</h2>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              >
+                ×
+              </button>
             </div>
-          </Link>
-        ))}
-      </div>
+            <div className="p-6">
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Subject Name</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                    placeholder="Mathematics, Physics, etc."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Subject Code</label>
+                  <input 
+                    type="text" 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                    placeholder="MAT, PHY, etc."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Target Grade (%)</label>
+                  <input 
+                    type="number" 
+                    min="0"
+                    max="100"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                    placeholder="75"
+                  />
+                </div>
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsCreateModalOpen(false)}
+                    className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="flex-1 px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+                  >
+                    Create Subject
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

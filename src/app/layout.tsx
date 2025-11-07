@@ -1,3 +1,4 @@
+import SessionProvider from "@/components/navigation/providers/SessionProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
@@ -46,9 +47,11 @@ export default function RootLayout({
       <body
         className={`${frygia.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryClientProvider>
-          {children}
-        </QueryClientProvider>
+        <SessionProvider>
+          <QueryClientProvider>
+            {children}
+          </QueryClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -1,13 +1,13 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
-import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Link from 'next/link'
 import { Eye, EyeOff, Mail, Lock, LogIn, BookOpen } from 'lucide-react'
 import { useState } from 'react'
-import { authApi } from '@/lib/api-client'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -18,6 +18,9 @@ type LoginFormData = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const router = useRouter()
   
   const {
     register,
@@ -27,21 +30,30 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   })
 
-  const loginMutation = useMutation({
-    mutationFn: authApi.login,
-    onSuccess: (data) => {
-      // Handle successful login
-      console.log('Login successful:', data)
-      // Store tokens, redirect to dashboard, etc.
-    },
-    onError: (error: any) => {
-      // Handle login error
-      console.error('Login failed:', error)
-    },
-  })
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true)
+    setError('')
 
-  const onSubmit = (data: LoginFormData) => {
-    loginMutation.mutate(data)
+    try {
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError('Invalid email or password')
+      } else {
+        // Redirect to dashboard on success
+        router.push('/dashboard')
+        router.refresh() // Refresh to update auth state
+      }
+    } catch (error) {
+      setError('An unexpected error occurred')
+      console.error('Login error:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -126,22 +138,22 @@ export default function LoginPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loginMutation.isPending}
+              disabled={isLoading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loginMutation.isPending ? (
+              {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <LogIn size={20} />
               )}
-              {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
 
             {/* Error Message */}
-            {loginMutation.isError && (
+            {error && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600 text-center">
-                  {loginMutation.error?.response?.data?.message || 'Login failed. Please try again.'}
+                  {error}
                 </p>
               </div>
             )}

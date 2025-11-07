@@ -39,14 +39,7 @@ const AppBar = () => {
     <header className="app-bar">
       <div className="app-bar-content">
         <div className="app-bar-section">
-          <div className="search-bar">
-            <Search size={18} className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Search subjects, notes, or resources..." 
-              className="search-input"
-            />
-          </div>
+          
         </div>
         
         <div className="app-bar-section">
