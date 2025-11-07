@@ -23,6 +23,15 @@ jobs:
         node-version: '18'
         cache: 'npm'
 
+    - name: Create production environment file
+      run: |
+        cat > .env.production << EOF
+        NEXT_PUBLIC_API_URL=https://aptiverse.co.za/api
+        ALLOW_SELF_SIGNED=true
+        NEXTAUTH_URL=https://aptiverse.co.za
+        NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+        EOF
+
     - name: Install dependencies
       run: npm ci
 
@@ -31,7 +40,7 @@ jobs:
 
     - name: Create Docker image
       run: |
-        # Force clean build and use production API URL
+        # Force clean build with production environment
         docker build --no-cache -t aptiverse-frontend .
         docker save aptiverse-frontend | gzip > frontend-image.tar.gz
 
@@ -76,7 +85,6 @@ jobs:
             --name aptiverse-frontend \
             --network aptiverse-net \
             -p 3000:3000 \
-            -e NEXT_PUBLIC_API_URL=https://aptiverse.co.za/api \
             -e NODE_ENV=production \
             aptiverse-frontend
             
