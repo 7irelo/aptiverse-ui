@@ -1,7 +1,9 @@
-// lib/api-client.ts
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://localhost:44390/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://api.aptiverse.co.za/api'  // <-- ADD /api HERE
+    : 'https://localhost:44390/api');     // <-- ADD /api HERE
 
 const createApiClients = () => {
   const allowSelfSigned = process.env.ALLOW_SELF_SIGNED === 'true';
@@ -101,12 +103,12 @@ interface AuthResponse {
 
 export const authApi = {
   login: async (data: LoginData): Promise<AuthResponse> => {
-    const response = await authClient.post<AuthResponse>('/auth/login', data);
+    const response = await authClient.post<AuthResponse>('/auth/login', data); // Now becomes /api/auth/login
     return response.data;
   },
 
   register: async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await authClient.post<AuthResponse>('/auth/register', data);
+    const response = await authClient.post<AuthResponse>('/auth/register', data); // Now becomes /api/auth/register
     return response.data;
   },
 };
