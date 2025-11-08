@@ -1,5 +1,6 @@
 // lib/services/api-client.ts
 import axios from 'axios';
+import { getSession } from './auth';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
   (process.env.NODE_ENV === 'production' 
@@ -18,7 +19,7 @@ const createApiClients = () => {
         maxSockets: 50,
       });
     } catch (error) {
-      console.error('❌ Failed to create HTTPS agent:', error);
+      console.error('Failed to create HTTPS agent:', error);
     }
   }
 
@@ -34,30 +35,20 @@ const createApiClients = () => {
   const authClient = axios.create(baseConfig);
   const apiClient = axios.create(baseConfig);
 
-  authClient.interceptors.request.use(
-    (config) => {
+  apiClient.interceptors.request.use(
+    async (config) => {
+      try {
+        const session = await getSession();
+        if (session?.accessToken) {
+          config.headers.Authorization = `Bearer ${session?.accessToken}`;
+        }
+      } catch (error) {
+        console.error('Error in request interceptor:', error);
+      }
+      
       return config;
     },
     (error) => {
-      console.error('❌ API Request Error:', error);
-      return Promise.reject(error);
-    }
-  );
-
-  authClient.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    (error) => {
-      console.error('❌ API Response Error:', {
-        message: error.message,
-        code: error.code,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        url: error.config?.url,
-        baseURL: error.config?.baseURL,
-        stack: error.stack
-      });
       return Promise.reject(error);
     }
   );
@@ -69,41 +60,6 @@ const clients = createApiClients();
 
 export const authClient = clients.authClient;
 export const apiClient = clients.apiClient;
-
-const getAuthToken = async (): Promise<string | null> => {
-  try {
-    if (typeof window === 'undefined') {
-      const { getServerSession } = await import('next-auth');
-      const session = await getServerSession();
-      return session?.accessToken as string || null;
-    } else {
-      const { getSession } = await import('next-auth/react');
-      const session = await getSession();
-      return session?.accessToken as string || null;
-    }
-  } catch (error) {
-    console.error('❌ Error getting auth token:', error);
-    return null;
-  }
-};
-
-apiClient.interceptors.request.use(
-  async (config) => {
-    try {
-      const token = await getAuthToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (error) {
-      console.error('❌ Error adding auth token:', error);
-    }
-    return config;
-  },
-  (error) => {
-    console.error('❌ Request interceptor error:', error);
-    return Promise.reject(error);
-  }
-);
 
 interface LoginData {
   email: string;
@@ -135,22 +91,8 @@ interface AuthResponse {
 
 export const authApi = {
   login: async (data: LoginData): Promise<AuthResponse> => {
-    console.log('🔐 authApi.login called with:', { 
-      email: data.email,
-      passwordLength: data.password.length 
-    });
-    
-    try {
-      const response = await authClient.post<AuthResponse>('/auth/login', data);
-      return response.data;
-    } catch (error: any) {
-      console.error('❌ authApi.login failed:', {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data
-      });
-      throw error;
-    }
+    const response = await authClient.post<AuthResponse>('/auth/login', data);
+    return response.data;
   },
 
   register: async (data: RegisterData): Promise<AuthResponse> => {
