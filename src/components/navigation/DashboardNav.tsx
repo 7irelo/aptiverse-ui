@@ -45,17 +45,17 @@ const DashboardNav = () => {
 
   return (
     <aside 
-      className={`h-screen bg-linear-to-b from-white to-slate-50 border-r border-gray-200 shadow-lg transition-all duration-300 ease-in-out flex flex-col overflow-hidden ${
+      className={`hidden lg:flex h-screen bg-gradient-to-b from-white to-slate-50 border-r border-gray-200 shadow-lg transition-all duration-300 ease-in-out flex-col overflow-hidden ${
         isCollapsed ? 'w-[70px]' : 'w-[280px]'
       }`}
     >
       {/* Header with Toggle */}
-      <div className="p-4 border-b border-slate-100 mb-4 bg-linear-to-r from-gray-50 to-white h-[70px]">
+      <div className="p-4 border-b border-slate-100 mb-4 bg-gradient-to-r from-gray-50 to-white h-[70px]">
         <div
           className="flex items-center space-x-3 cursor-pointer"
           onClick={toggleNav}
         >
-          <div className="shrink-0 bg-linear-to-r from-blue-600 to-purple-600 rounded-lg p-2">
+          <div className="shrink-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-2">
             <GraduationCap size={24} className="text-white" />
           </div>
           {!isCollapsed && (

@@ -357,40 +357,6 @@ const AppBar = () => {
                 </ul>
               </nav>
 
-              {/* Secondary Menu Items */}
-              <nav className="mb-6">
-                <ul className="space-y-1">
-                  {secondaryItems.map((item, index) => (
-                    <li 
-                      key={item.href}
-                      className="transform transition-all duration-300 ease-out"
-                      style={getItemAnimation(menuItems.length + index)}
-                    >
-                      <Link
-                        href={item.href}
-                        className="flex items-center gap-3 px-4 py-3 text-gray-700 no-underline rounded-lg transition-all duration-200 font-medium hover:bg-slate-100 hover:text-slate-800 hover:translate-y-[-1px] hover:shadow-sm"
-                        onClick={handleMobileLinkClick}
-                      >
-                        <item.icon size={20} className="shrink-0 text-gray-600" />
-                        <span className="text-sm font-medium">{item.label}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-
-              {/* Sign Out Button */}
-              <div className="pt-4 border-t border-gray-200">
-                <button 
-                  className="flex items-center gap-3 w-full px-4 py-3 border-none bg-transparent rounded-lg cursor-pointer text-red-600 transition-all duration-200 hover:bg-red-50 hover:translate-y-[-1px] hover:shadow-sm text-sm font-medium transform"
-                  style={getItemAnimation(menuItems.length + secondaryItems.length)}
-                  onClick={handleSignOut}
-                  disabled={isSigningOut}
-                >
-                  <LogOut size={18} />
-                  <span>{isSigningOut ? 'Signing Out...' : 'Sign Out'}</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
