@@ -26,7 +26,7 @@ jobs:
     - name: Create production environment file
       run: |
         cat > .env.production << EOF
-        NEXT_PUBLIC_API_URL=https://aptiverse.co.za/api
+        NEXT_PUBLIC_API_URL=https://api.aptiverse.co.za/api
         ALLOW_SELF_SIGNED=true
         NEXTAUTH_URL=https://aptiverse.co.za
         NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
@@ -86,6 +86,9 @@ jobs:
             --network aptiverse-net \
             -p 3000:3000 \
             -e NODE_ENV=production \
+            -e NEXT_PUBLIC_API_URL=https://api.aptiverse.co.za/api \
+            -e NEXTAUTH_URL=https://aptiverse.co.za \
+            -e NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
             aptiverse-frontend
             
           echo "Cleaning up..."
