@@ -1,25 +1,25 @@
+// lib/services/api-client.ts
 import axios from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
   (process.env.NODE_ENV === 'production' 
-    ? 'https://api.aptiverse.co.za/api'  // <-- ADD /api HERE
-    : 'https://localhost:44390/api');     // <-- ADD /api HERE
+    ? 'https://api.aptiverse.co.za/api'
+    : 'https://localhost:44390/api');
 
 const createApiClients = () => {
-  const allowSelfSigned = process.env.ALLOW_SELF_SIGNED === 'true';
-  
   let httpsAgent = undefined;
   
-  if (allowSelfSigned && typeof window === 'undefined') {
-    const https = require('https');
-    if (process.env.NODE_ENV === 'production') {
-      console.warn('⚠️  SECURITY: Using self-signed certificates in production');
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const https = require('https');
+      httpsAgent = new https.Agent({
+        rejectUnauthorized: false,
+        keepAlive: true,
+        maxSockets: 50,
+      });
+    } catch (error) {
+      console.error('❌ Failed to create HTTPS agent:', error);
     }
-    httpsAgent = new https.Agent({
-      rejectUnauthorized: false,
-      keepAlive: true,
-      maxSockets: 50,
-    });
   }
 
   const baseConfig = {
@@ -27,12 +27,40 @@ const createApiClients = () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    timeout: 15000,
+    timeout: 10000,
     ...(httpsAgent && { httpsAgent }),
   };
 
   const authClient = axios.create(baseConfig);
   const apiClient = axios.create(baseConfig);
+
+  authClient.interceptors.request.use(
+    (config) => {
+      return config;
+    },
+    (error) => {
+      console.error('❌ API Request Error:', error);
+      return Promise.reject(error);
+    }
+  );
+
+  authClient.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      console.error('❌ API Response Error:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: error.config?.url,
+        baseURL: error.config?.baseURL,
+        stack: error.stack
+      });
+      return Promise.reject(error);
+    }
+  );
 
   return { authClient, apiClient };
 };
@@ -54,6 +82,7 @@ const getAuthToken = async (): Promise<string | null> => {
       return session?.accessToken as string || null;
     }
   } catch (error) {
+    console.error('❌ Error getting auth token:', error);
     return null;
   }
 };
@@ -66,11 +95,14 @@ apiClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (error) {
-      // Silent fail - proceed without token
+      console.error('❌ Error adding auth token:', error);
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('❌ Request interceptor error:', error);
+    return Promise.reject(error);
+  }
 );
 
 interface LoginData {
@@ -103,12 +135,26 @@ interface AuthResponse {
 
 export const authApi = {
   login: async (data: LoginData): Promise<AuthResponse> => {
-    const response = await authClient.post<AuthResponse>('/auth/login', data); // Now becomes /api/auth/login
-    return response.data;
+    console.log('🔐 authApi.login called with:', { 
+      email: data.email,
+      passwordLength: data.password.length 
+    });
+    
+    try {
+      const response = await authClient.post<AuthResponse>('/auth/login', data);
+      return response.data;
+    } catch (error: any) {
+      console.error('❌ authApi.login failed:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      throw error;
+    }
   },
 
   register: async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await authClient.post<AuthResponse>('/auth/register', data); // Now becomes /api/auth/register
+    const response = await authClient.post<AuthResponse>('/auth/register', data);
     return response.data;
   },
 };

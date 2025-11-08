@@ -19,7 +19,7 @@ const handler = NextAuth({
           })
 
           if (data.token) {
-            return {
+            const user = {
               id: data.user.id,
               email: data.user.email,
               name: `${data.user.firstName} ${data.user.lastName}`,
@@ -27,10 +27,12 @@ const handler = NextAuth({
               lastName: data.user.lastName,
               userType: data.user.userType,
               accessToken: data.token,
-            } as any
+            }
+            
+            return user as any;
           }
 
-          return null
+          return null;
         } catch (error: any) {
           if (error.response?.status === 401) {
             throw new Error('Invalid email or password');
@@ -74,6 +76,7 @@ const handler = NextAuth({
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60,
   },
+  debug: process.env.NODE_ENV === 'development'
 })
 
 export { handler as GET, handler as POST }
