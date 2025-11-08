@@ -2,7 +2,7 @@
 import { BookOpen, Edit, MoreVertical, Plus, Search, Trash2, ChevronRight } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { subjectsData } from './constants'
+import subjectsData from '@/data/subjectsData'
 
 const Subjects = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
