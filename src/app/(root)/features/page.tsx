@@ -1,111 +1,236 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client"
+import React from 'react'
+import { 
+  Brain, 
+  BarChart3, 
+  Target, 
+  Users, 
+  Clock, 
+  Shield, 
+  Zap, 
+  BookOpen, 
+  TrendingUp,
+  Smartphone,
+  Globe,
+  Award,
+  Heart
+} from 'lucide-react'
+import Link from 'next/link'
 
-export default function Home() {
+const Features = () => {
+  const mainFeatures = [
+    {
+      icon: Brain,
+      title: "AI-Powered Learning",
+      description: "Advanced machine learning algorithms adapt to each student's learning style and pace",
+      features: ["Personalized learning paths", "Real-time difficulty adjustment", "Intelligent content recommendations"],
+      color: "from-purple-500 to-pink-500",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200"
+    },
+    {
+      icon: BarChart3,
+      title: "Advanced Analytics",
+      description: "Comprehensive performance tracking with actionable insights for students and educators",
+      features: ["Real-time progress monitoring", "Predictive performance analysis", "Detailed learning analytics"],
+      color: "from-blue-500 to-cyan-500",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200"
+    },
+    {
+      icon: Target,
+      title: "Goal-Oriented Learning",
+      description: "Set, track, and achieve academic goals with personalized milestone planning",
+      features: ["Custom goal setting", "Progress tracking", "Milestone celebrations"],
+      color: "from-green-500 to-emerald-500",
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200"
+    }
+  ]
+
+  const featureGrid = [
+    {
+      icon: Users,
+      title: "Collaborative Learning",
+      description: "Connect with peers and educators in a supportive learning community",
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50"
+    },
+    {
+      icon: Clock,
+      title: "24/7 AI Tutoring",
+      description: "Instant help and explanations available anytime, anywhere",
+      color: "text-orange-600",
+      bgColor: "bg-orange-50"
+    },
+    {
+      icon: Shield,
+      title: "Safe Learning Environment",
+      description: "Secure platform with privacy-focused design for all users",
+      color: "text-green-600",
+      bgColor: "bg-green-50"
+    },
+    {
+      icon: Zap,
+      title: "Instant Feedback",
+      description: "Real-time assessment and constructive feedback on all assignments",
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50"
+    },
+    {
+      icon: BookOpen,
+      title: "Curriculum Aligned",
+      description: "Content perfectly aligned with South African CAPS curriculum",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50"
+    },
+    {
+      icon: TrendingUp,
+      title: "Progress Tracking",
+      description: "Visual progress reports and improvement metrics",
+      color: "text-pink-600",
+      bgColor: "bg-pink-50"
+    },
+    {
+      icon: Smartphone,
+      title: "Mobile Optimized",
+      description: "Seamless learning experience across all devices",
+      color: "text-purple-600",
+      bgColor: "bg-purple-50"
+    },
+    {
+      icon: Globe,
+      title: "Offline Access",
+      description: "Download materials and continue learning without internet",
+      color: "text-gray-600",
+      bgColor: "bg-gray-50"
+    },
+    {
+      icon: Award,
+      title: "Achievement System",
+      description: "Gamified learning with badges and rewards for milestones",
+      color: "text-red-600",
+      bgColor: "bg-red-50"
+    },
+    {
+      icon: Heart,
+      title: "Wellness Support",
+      description: "Mental health and wellness resources integrated into learning",
+      color: "text-rose-600",
+      bgColor: "bg-rose-50"
+    }
+  ]
+
+  const stats = [
+    { number: "98%", label: "Student Satisfaction" },
+    { number: "47%", label: "Faster Learning" },
+    { number: "2.1x", label: "Better Results" },
+    { number: "24/7", label: "AI Support" }
+  ]
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Enhanced Header/Hero Section */}
-      <header className="relative bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 overflow-hidden">
-        {/* Optimized Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-black opacity-50"></div>
-          <Image
-            src="/images/people.jpg"
-            alt="Diverse group of students collaborating and learning together"
-            fill
-            className="object-cover object-center"
-            priority
-            sizes="100vw"
-            quality={90}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 to-purple-900/70 mix-blend-overlay"></div>
-        </div>
-        <div className="absolute top-1/4 left-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-10 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      {/* Header */}
+      <div className="relative bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/20">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6 border border-white/20">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-white/90 text-sm font-medium">AI-Powered Learning Platform</span>
+              <span className="text-white/90 text-sm font-medium">Platform Features</span>
             </div>
-
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
-              Aptiverse
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+              Powerful Features for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">Exceptional Learning</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-light leading-relaxed">
-              The Future of <span className="text-blue-300">Intelligent Education</span> for South African Scholars
+            <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Discover how our AI-powered platform transforms traditional education into personalized, 
+              engaging, and effective learning experiences for South African students.
             </p>
-            <p className="text-lg text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed opacity-90">
-              Advanced AI analytics, personalized learning paths, and comprehensive academic support
-              designed specifically for Grade 11 and 12 students achieving exceptional results.
-            </p>
-
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link
-                href="/login"
-                className="group relative bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-2xl hover:shadow-blue-500/25 hover:scale-105"
+              <Link 
+                href="/login" 
+                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-2xl hover:shadow-white/25 hover:scale-105"
               >
-                <span className="relative z-10">Access Intelligent Platform</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
+                Start Learning Today
               </Link>
-              <Link
-                href="/demo"
-                className="group border-2 border-white/30 text-white px-6 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 hover:border-white/50 transition-all duration-300 backdrop-blur-sm"
+              <Link 
+                href="/demo" 
+                className="border-2 border-white text-white px-6 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
               >
-                <span className="flex items-center gap-2">
-                  Watch Demo
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </span>
+                Watch Feature Demo
               </Link>
-            </div>
-
-            {/* Stats Bar */}
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-2">98%</div>
-                <div className="text-xs text-gray-300">Pass Rate</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-2">15%</div>
-                <div className="text-xs text-gray-300">Average Improvement</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-2">2.5k+</div>
-                <div className="text-xs text-gray-300">Active Students</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-2">24/7</div>
-                <div className="text-xs text-gray-300">AI Support</div>
-              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
-          <div className="animate-bounce">
-            <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
+      {/* Stats Bar */}
+      <div className="relative -mt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {stats.map((stat, index) => (
+            <div key={index} className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200 text-center">
+              <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
+              <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Features */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">
+              Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Learning Technologies</span>
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Powered by cutting-edge AI and educational research to deliver unprecedented learning outcomes
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {mainFeatures.map((feature, index) => {
+              const Icon = feature.icon
+              return (
+                <div key={index} className="group relative">
+                  <div className={`relative bg-white rounded-3xl p-8 shadow-xl border ${feature.borderColor} hover:shadow-2xl transition-all duration-500 hover:-translate-y-2`}>
+                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon size={28} />
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
+                    <p className="text-gray-600 mb-6 leading-relaxed">{feature.description}</p>
+                    
+                    <ul className="space-y-3">
+                      {feature.features.map((item, itemIndex) => (
+                        <li key={itemIndex} className="flex items-center gap-3 text-sm text-gray-700">
+                          <div className={`w-2 h-2 bg-gradient-to-r ${feature.color} rounded-full`}></div>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <div className={`absolute inset-0 bg-gradient-to-r ${feature.color} rounded-3xl opacity-0 group-hover:opacity-5 transition-opacity duration-300 -z-10`}></div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
-      </header>
+      </section>
 
       {/* Enhanced Analytics Dashboard Preview */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-white to-transparent"></div>
-
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-              </svg>
-              Advanced Analytics Platform
+              <BarChart3 size={16} />
+              Live Analytics Dashboard
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">
               Real-Time <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Performance Intelligence</span>
@@ -260,9 +385,7 @@ export default function Home() {
                   <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-4 border border-orange-100">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                        <Brain size={14} className="text-white" />
                       </div>
                       <h3 className="text-base font-semibold text-gray-900">AI Learning Insights</h3>
                     </div>
@@ -413,107 +536,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Advanced Features Showcase */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
-        <div className="absolute top-20 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl"></div>
-
+      {/* Comprehensive Features Grid */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">
-              Revolutionary <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Learning Technology</span>
+              Complete <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Learning Ecosystem</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Powered by cutting-edge AI and machine learning algorithms that adapt to each student's unique learning journey
+              Everything students need to succeed, all in one intelligent platform
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1580894894513-541e068a3e2b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                  alt="AI-powered learning analytics dashboard"
-                  width={500}
-                  height={350}
-                  className="w-full h-auto"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-              </div>
-
-              {/* Floating Stats Cards */}
-              <div className="absolute -bottom-4 -right-4 bg-white rounded-xl p-4 shadow-xl border border-gray-200">
-                <div className="text-lg font-bold text-gray-900 mb-1">47%</div>
-                <div className="text-xs text-gray-600">Faster Learning</div>
-                <div className="text-xs text-green-600 font-medium">vs traditional methods</div>
-              </div>
-            </div>
-
-            <div>
-              <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium mb-4">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
-                </svg>
-                Intelligent Adaptation
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">
-                Dynamic Learning Paths Powered by Machine Learning
-              </h3>
-              <p className="text-base text-gray-600 mb-6 leading-relaxed">
-                Our AI continuously analyzes 127+ data points to create perfectly tailored learning experiences that evolve with student progress.
-              </p>
-
-              <div className="space-y-3">
-                {[
-                  "Real-time difficulty adjustment based on performance",
-                  "Personalized content recommendations",
-                  "Predictive analytics for early intervention",
-                  "Automated study schedule optimization"
-                ].map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {featureGrid.map((feature, index) => {
+              const Icon = feature.icon
+              return (
+                <div key={index} className="group">
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-center">
+                    <div className={`w-12 h-12 ${feature.bgColor} rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon size={24} className={feature.color} />
                     </div>
-                    <span className="text-sm text-gray-700 font-medium">{feature}</span>
+                    <h3 className="font-semibold text-gray-900 mb-2 text-sm">{feature.title}</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">{feature.description}</p>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Feature Grid */}
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: "🧠",
-                title: "Cognitive Analytics",
-                description: "Advanced pattern recognition identifies learning styles and optimizes teaching methods",
-                color: "from-blue-500 to-blue-600"
-              },
-              {
-                icon: "📊",
-                title: "Predictive Performance",
-                description: "Machine learning models forecast academic outcomes and recommend interventions",
-                color: "from-purple-500 to-purple-600"
-              },
-              {
-                icon: "🎯",
-                title: "Precision Tutoring",
-                description: "AI tutors provide instant, contextual help exactly when students need it most",
-                color: "from-green-500 to-green-600"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="group relative bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
-                <div className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center text-xl mb-4 group-hover:scale-105 transition-transform duration-300`}>
-                  {feature.icon}
                 </div>
-                <h4 className="text-lg font-bold text-gray-900 mb-3">{feature.title}</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">{feature.description}</p>
-                <div className={`absolute inset-0 bg-gradient-to-r ${feature.color} rounded-2xl opacity-0 group-hover:opacity-5 transition-opacity duration-300 -z-10`}></div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
@@ -636,153 +685,185 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Social Proof & Results */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-black opacity-40"></div>
-          <Image
-            src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-            alt="Students celebrating academic success"
-            fill
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">
-              Proven <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Academic Excellence</span>
-            </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of students who have transformed their academic journey with our intelligent platform
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[
-              { number: "2.1x", text: "Higher University Acceptance" },
-              { number: "15%", text: "Average Grade Improvement" },
-              { number: "96%", text: "Student Satisfaction Rate" }
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">{stat.number}</div>
-                <div className="text-gray-300 text-sm">{stat.text}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Testimonial */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-3xl mx-auto border border-white/20">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                SJ
-              </div>
-              <div>
-                <div className="text-lg font-semibold text-white">Sarah Johnson</div>
-                <div className="text-blue-300 text-sm">Grade 12 Student • 94% Average</div>
-              </div>
-            </div>
-            <p className="text-base text-gray-200 leading-relaxed italic">
-              "Aptiverse didn't just help me improve my grades—it transformed how I learn. The AI understood my strengths
-              and weaknesses better than I did, and the personalized study plans helped me achieve results I never thought possible."
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
-            Ready to Transform Your Academic Journey?
-          </h2>
-          <p className="text-lg text-blue-100 mb-8 max-w-xl mx-auto leading-relaxed">
-            Experience the future of education with our AI-powered platform. Join South Africa's most advanced learning ecosystem today.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/login"
-              className="group bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-base hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-white/25 hover:scale-105"
-            >
-              <span className="flex items-center gap-2">
-                Start Learning Now
-                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </span>
-            </Link>
-            <Link
-              href="/demo"
-              className="group border-2 border-white text-white px-6 py-4 rounded-xl font-semibold text-base hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
-            >
-              <span className="flex items-center gap-2">
-                Book Personalized Demo
-                <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </span>
-            </Link>
-          </div>
-
-          <p className="text-blue-200 mt-6 text-xs">
-            No credit card required • 14-day free trial • Setup in minutes
-          </p>
-        </div>
-      </section>
-
-      {/* Enhanced Footer */}
-      <footer className="bg-gray-900 text-white py-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
+      {/* AI-Powered Learning Deep Dive */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h3 className="text-xl font-bold mb-3 tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Aptiverse
-              </h3>
-              <p className="text-gray-400 mb-4 text-sm leading-relaxed">
-                Advanced educational intelligence for South Africa's future leaders and innovators.
-              </p>
-              <div className="flex gap-3">
-                {['twitter', 'linkedin', 'instagram'].map((social) => (
-                  <div key={social} className="w-8 h-8 bg-gray-800 rounded flex items-center justify-center hover:bg-gray-700 transition-colors cursor-pointer">
-                    <span className="text-gray-400 text-sm">ⓘ</span>
+              <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <Brain size={16} />
+                Intelligent Learning Engine
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">
+                How Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">AI Technology</span> Works
+              </h2>
+              
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-purple-600 font-bold text-sm">1</span>
                   </div>
-                ))}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Continuous Assessment</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Our AI analyzes 127+ data points including response time, accuracy patterns, and learning preferences to understand each student's unique needs.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-blue-600 font-bold text-sm">2</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Personalized Adaptation</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Learning content and difficulty automatically adjust in real-time based on performance, ensuring optimal challenge and engagement.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-green-600 font-bold text-sm">3</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Predictive Analytics</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Machine learning models forecast future performance and identify potential challenges before they impact learning outcomes.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
+            
+            <div className="relative">
+              <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-8 text-white">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <h3 className="text-xl font-bold mb-4">AI Learning Insights</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-sm">Optimal learning time detected: 14:00-17:00</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      <span className="text-sm">Algebra concepts mastered ahead of schedule</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                      <span className="text-sm">Physics practice session recommended</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 grid grid-cols-2 gap-4 text-center">
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-2xl font-bold">85%</div>
+                    <div className="text-xs opacity-80">Mastery Level</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-2xl font-bold">12%</div>
+                    <div className="text-xs opacity-80">Progress This Week</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Floating elements */}
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-yellow-400/20 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      {/* Benefits Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-900 to-purple-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">
+              Transformative <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">Learning Benefits</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
             {[
-              { title: "Platform", links: ["Features", "Pricing", "Case Studies", "API"] },
-              { title: "Resources", links: ["Documentation", "Tutorials", "Blog", "Research"] },
-              { title: "Company", links: ["About", "Careers", "Contact", "Partners"] }
-            ].map((column, index) => (
-              <div key={index}>
-                <h4 className="text-base font-semibold text-white mb-3">{column.title}</h4>
-                <ul className="space-y-2">
-                  {column.links.map((link, linkIndex) => (
-                    <li key={linkIndex}>
-                      <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">{link}</a>
+              {
+                title: "For Students",
+                benefits: [
+                  "Personalized learning experience",
+                  "24/7 AI tutoring support",
+                  "Engaging, gamified content",
+                  "Real-time progress tracking"
+                ]
+              },
+              {
+                title: "For Educators",
+                benefits: [
+                  "Automated assessment grading",
+                  "Detailed analytics dashboard",
+                  "Early intervention alerts",
+                  "Curriculum planning tools"
+                ]
+              },
+              {
+                title: "For Parents",
+                benefits: [
+                  "Progress monitoring access",
+                  "Regular achievement reports",
+                  "Wellbeing tracking",
+                  "Direct communication channels"
+                ]
+              }
+            ].map((group, index) => (
+              <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <h3 className="text-xl font-bold mb-6 text-center">{group.title}</h3>
+                <ul className="space-y-4">
+                  {group.benefits.map((benefit, benefitIndex) => (
+                    <li key={benefitIndex} className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full flex-shrink-0"></div>
+                      <span className="text-blue-100">{benefit}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-
-          <div className="pt-6 border-t border-gray-800 text-center">
-            <p className="text-gray-500 text-sm">
-              © 2024 Aptiverse. Transforming education through artificial intelligence and innovation.
-            </p>
-          </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">
+            Ready to Experience <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Intelligent Learning?</span>
+          </h2>
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Join thousands of South African students who are achieving exceptional results with our AI-powered platform.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link 
+              href="/login" 
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-2xl hover:shadow-blue-500/25 hover:scale-105"
+            >
+              Start Free Trial
+            </Link>
+            <Link 
+              href="/contact" 
+              className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:border-blue-600 hover:text-blue-600 transition-all duration-300"
+            >
+              Schedule Demo
+            </Link>
+          </div>
+          
+          <p className="text-gray-500 mt-6 text-sm">
+            No credit card required • 14-day free trial • Setup in 5 minutes
+          </p>
+        </div>
+      </section>
     </div>
-  );
+  )
 }
+
+export default Features

@@ -81,7 +81,7 @@ const RootNavbar = () => {
                 <LogIn size={18} />
                 <span>Login</span>
               </Link>
-              <Link href="/signup" className="mobile-auth-link signup" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/register" className="mobile-auth-link signup" onClick={() => setIsMenuOpen(false)}>
                 <User size={18} />
                 <span>Sign Up</span>
               </Link>
